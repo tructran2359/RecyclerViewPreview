@@ -17,6 +17,6 @@ class ExampleUnitTest {
 
     @Test
     fun foo() {
-        println(getData().map { it.nid })
+        println(getData().map { it.title })
     }
 }
