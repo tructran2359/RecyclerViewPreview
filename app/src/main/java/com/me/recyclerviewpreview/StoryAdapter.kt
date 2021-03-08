@@ -46,35 +46,61 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    class ThumbnailStoryHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ThumbnailStoryHolder(thumbnailView: View) : RecyclerView.ViewHolder(thumbnailView) {
+        var titleThumbnail: TextView = itemView.findViewById(R.id.title_thumbnail)
+        var imageThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
+        var authorThumbnail: TextView = itemView.findViewById(R.id.author_thumbnail)
+        var timeThumbnail: TextView = itemView.findViewById(R.id.time_thumbnail)
 
-        fun bind(story: Story) {}
+        fun bind(story: Story) {
+            titleThumbnail.text = story.title
+            imageThumbnail.load(story.imageUrl)
+            if (story.author!=null){
+                authorThumbnail.text = "By " + story.author
+            }
+            else {
+                authorThumbnail.text = story.author
+            }
+
+            if (story.releaseDate!=null){
+                timeThumbnail.text = getTimeAgo(story.releaseDate)
+            }
+
+        }
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == TYPE_FEATURED) {
-
-
+        return if (viewType == TYPE_FEATURED) {
+            val view = parent.inflate(R.layout.item_featured_story)
+            FeaturedStoryHolder(view)
+        } else{
+            val view = parent.inflate(R.layout.item_thumbnail_story)
+            ThumbnailStoryHolder(view)
         }
-        val view = parent.inflate(R.layout.item_featured_story, false)
-        return FeaturedStoryHolder(view)
+
     }
 
     override fun getItemCount() = items.size
 
-//    override fun getItemViewType(position: Int): Int {
-////        return if (position == 0) {
-////            TYPE_FEATURED
-////        } else {
-////            TYPE_THUMBNAIL
-////        }
-//    }
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) {
+            TYPE_FEATURED
+        } else {
+            TYPE_THUMBNAIL
+        }
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
-        (holder as FeaturedStoryHolder).run {
-            bind(item)
+//        when (holder.itemViewType){
+//            0 -> (holder as FeaturedStoryHolder).run { bind(item) }
+//            else -> (holder  as ThumbnailStoryHolder).run{ bind(item)}
+//        }
+        if(holder.itemViewType==1){
+            (holder as FeaturedStoryHolder).run { bind(item) }
+        }else {
+            (holder  as ThumbnailStoryHolder).run{ bind(item)}
         }
 
     }
