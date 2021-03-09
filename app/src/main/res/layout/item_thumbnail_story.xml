@@ -5,74 +5,76 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    tools:background="@color/yellow"
     android:layout_marginStart="@dimen/medium_spacing"
     android:layout_marginEnd="@dimen/medium_spacing">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="@dimen/match_constrain"
+        android:id="@+id/image_thumbnail"
+        android:layout_width="@dimen/thumbnail_image_width"
         android:layout_height="@dimen/match_constrain"
         android:layout_marginTop="@dimen/medium_spacing"
+        android:layout_marginBottom="@dimen/medium_spacing"
         android:contentDescription="@string/image_story_content_description"
         android:scaleType="centerCrop"
-        tools:background="@color/green"
-        app:layout_constraintDimensionRatio="@string/story_image_ratio"
-        app:layout_constraintEnd_toEndOf="parent"
+        tools:background="@color/light_blue"
+        app:layout_constraintDimensionRatio="@string/thumbnail_ratio"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:id="@+id/title_thumbnail"
+        android:layout_width="@dimen/match_constrain"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/match_constrain"
+        android:layout_marginTop="@dimen/medium_spacing"
         android:textColor="@color/black"
         android:textSize="@dimen/big_word_size"
         android:textStyle="bold"
+        android:layout_marginStart="@dimen/medium_spacing"
         tools:text="This is Title"
+        android:ellipsize="end"
+        android:maxLines="3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
+        app:layout_constraintStart_toEndOf="@+id/image_thumbnail"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="@dimen/medium_word_size"
-        tools:text="Description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
-    <TextView
-        android:id="@+id/author"
+        android:id="@+id/author_thumbnail"
         android:layout_width="@dimen/match_constrain"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_spacing"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/grey"
         android:textSize="@dimen/small_word_size"
-        tools:text="This is author"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintBottom_toTopOf="@+id/time_thumbnail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_thumbnail"
+        android:layout_marginEnd="@dimen/limit_author_end_margin"
+        tools:text="This is author" />
 
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/time_thumbnail"
         android:layout_width="@dimen/match_constrain"
+        android:layout_marginStart="@dimen/medium_spacing"
+        android:layout_marginBottom="@dimen/small_spacing"
         android:layout_height="wrap_content"
         android:textColor="@color/grey"
         android:textSize="@dimen/small_word_size"
         tools:text="This is time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/author" />
+        app:layout_constraintStart_toEndOf="@+id/image_thumbnail"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/separate_line_height"
-        android:layout_marginTop="@dimen/small_spacing"
+        android:layout_marginTop="@dimen/medium_spacing"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/time"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     <ImageView
@@ -80,23 +82,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/small_spacing"
+        android:layout_marginEnd="@dimen/very_small_spacing"
+        android:layout_marginBottom="@dimen/medium_spacing"
         android:background="@drawable/ic_bookmark_grey"
         android:contentDescription="@string/save_image"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/share"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
-
+        app:layout_constraintEnd_toStartOf="@+id/share" />
     <ImageView
         android:id="@+id/share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/medium_spacing"
+        android:layout_marginEnd="@dimen/small_spacing"
+        android:layout_marginBottom="@dimen/medium_spacing"
         android:background="@drawable/ic_share_grey"
         android:contentDescription="@string/share_image"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

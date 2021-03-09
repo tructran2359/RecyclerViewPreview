@@ -32,49 +32,73 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             titleTextView.text = item.title
             descriptionTextView.text = item.description
             imageView.load(item.imageUrl)
-            if (item.author!=null){
+            if (item.author != null && item.author.isNotEmpty()) {
                 authorTextView.text = "By " + item.author
-            }
-            else {
-                authorTextView.text = item.author
+            } else {
+                authorTextView.text = ""
             }
 
-            if (item.releaseDate!=null){
+            if (item.releaseDate != null && item.releaseDate.isNotEmpty()) {
                 timeTextView.text = getTimeAgo(item.releaseDate)
+            } else {
+                timeTextView.text = ""
             }
 
         }
     }
 
-    class ThumbnailStoryHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ThumbnailStoryHolder(thumbnailView: View) : RecyclerView.ViewHolder(thumbnailView) {
+        var titleThumbnail: TextView = itemView.findViewById(R.id.title_thumbnail)
+        var imageThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
+        var authorThumbnail: TextView = itemView.findViewById(R.id.author_thumbnail)
+        var timeThumbnail: TextView = itemView.findViewById(R.id.time_thumbnail)
 
-        fun bind(story: Story) {}
+        fun bind(story: Story) {
+            titleThumbnail.text = story.title
+            imageThumbnail.load(story.imageUrl)
+            if (story.author != null && story.author.isNotEmpty()) {
+                authorThumbnail.text = "By " + story.author
+            } else {
+                authorThumbnail.text = story.author
+            }
+
+            if (story.releaseDate != null && story.releaseDate.isNotEmpty()) {
+                timeThumbnail.text = getTimeAgo(story.releaseDate)
+            } else {
+                timeThumbnail.text = ""
+            }
+
+        }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == TYPE_FEATURED) {
-
-
+        return if (viewType == TYPE_FEATURED) {
+            val view = parent.inflate(R.layout.item_featured_story)
+            FeaturedStoryHolder(view)
+        } else {
+            val view = parent.inflate(R.layout.item_thumbnail_story)
+            ThumbnailStoryHolder(view)
         }
-        val view = parent.inflate(R.layout.item_featured_story, false)
-        return FeaturedStoryHolder(view)
     }
 
     override fun getItemCount() = items.size
 
-//    override fun getItemViewType(position: Int): Int {
-////        return if (position == 0) {
-////            TYPE_FEATURED
-////        } else {
-////            TYPE_THUMBNAIL
-////        }
-//    }
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) {
+            TYPE_FEATURED
+        } else {
+            TYPE_THUMBNAIL
+        }
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
-        (holder as FeaturedStoryHolder).run {
-            bind(item)
+        if (holder.itemViewType == 1) {
+            (holder as FeaturedStoryHolder)
+            holder.bind(item)
+        } else {
+            (holder as ThumbnailStoryHolder)
+            holder.bind(item)
         }
 
     }
@@ -90,22 +114,23 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
 }
-fun getTimeAgo(timeString:String): String{
+
+fun getTimeAgo(timeString: String): String {
     val dateFormat = SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss")
     val releaseTimeFormatted = dateFormat.parse(timeString)
     val nowTime = Date()
-    val seconds: Long = TimeUnit.MILLISECONDS.toSeconds(nowTime.time-releaseTimeFormatted.time)
-    val minutes: Long = TimeUnit.MILLISECONDS.toMinutes(nowTime.time-releaseTimeFormatted.time)
-    val hours: Long = TimeUnit.MILLISECONDS.toHours(nowTime.time-releaseTimeFormatted.time)
-    val days: Long = TimeUnit.MILLISECONDS.toDays(nowTime.time-releaseTimeFormatted.time)
+    val seconds: Long = TimeUnit.MILLISECONDS.toSeconds(nowTime.time - releaseTimeFormatted.time)
+    val minutes: Long = TimeUnit.MILLISECONDS.toMinutes(nowTime.time - releaseTimeFormatted.time)
+    val hours: Long = TimeUnit.MILLISECONDS.toHours(nowTime.time - releaseTimeFormatted.time)
+    val days: Long = TimeUnit.MILLISECONDS.toDays(nowTime.time - releaseTimeFormatted.time)
     return when {
-        seconds<60 -> {
+        seconds < 60 -> {
             ("$seconds seconds ago")
         }
-        minutes<60 -> {
+        minutes < 60 -> {
             ("$minutes minutes ago")
         }
-        hours<24 -> {
+        hours < 24 -> {
             ("$hours hours ago")
         }
         else -> {
