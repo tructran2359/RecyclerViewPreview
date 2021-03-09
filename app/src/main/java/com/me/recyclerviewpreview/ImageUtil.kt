@@ -9,6 +9,6 @@ fun ImageView.load(url: String?) {
     }
 
     Glide.with(this)
-        .load(url)
-        .into(this)
+            .load(url)
+            .into(this)
 }
