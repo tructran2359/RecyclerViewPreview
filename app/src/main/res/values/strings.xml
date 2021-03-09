@@ -3,4 +3,6 @@
     <string name="image_story_content_description">TODO</string>
     <string name="save_image">save image</string>
     <string name="share_image">share image</string>
+    <string name="thumbnail_ratio">16:10</string>
+    <string name="story_image_ratio">16:9</string>
 </resources>
