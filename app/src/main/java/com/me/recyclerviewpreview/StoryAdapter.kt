@@ -55,24 +55,22 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private fun onShareClick(view: View?) {
             if (view != null) {
-                val tempFeatureSelection = binding.title.text
-                Toast.makeText(view.context, "Share Clicked at article :$tempFeatureSelection ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(view.context, "Share Clicked at position $layoutPosition ", Toast.LENGTH_SHORT).show()
             }
             println("Share Clicked")
         }
 
         private fun onSaveClick(view: View?) {
             if (view != null) {
-                val tempFeatureSelection = binding.title.text
-                Toast.makeText(view.context, "Save Clicked at article :$tempFeatureSelection ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(view.context, "Save Clicked at position $layoutPosition ", Toast.LENGTH_SHORT).show()
             }
             println("Save Clicked")
         }
 
         override fun onClick(view: View?) {
             if (view != null) {
-                val tempFeatureSelection = binding.title.text
-                Toast.makeText(view.context, "Feature story selected at article :$tempFeatureSelection ", Toast.LENGTH_SHORT).show()
+                val tempDisplay = getData()[layoutPosition].title
+                Toast.makeText(view.context, "Feature story selected at article :$tempDisplay ", Toast.LENGTH_SHORT).show()
             }
             println("$view Clicked")
         }
@@ -104,24 +102,22 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private fun onShareClick(view: View?) {
             if (view != null) {
-                val tempTitle = binding.titleThumbnail.text
-                Toast.makeText(view.context, "Thumbnail Share Clicked at article : $tempTitle", Toast.LENGTH_SHORT).show()
+                Toast.makeText(view.context, "Thumbnail Share Clicked at position $layoutPosition", Toast.LENGTH_SHORT).show()
             }
             println("Share Clicked")
         }
 
         private fun onSaveClick(view: View?) {
             if (view != null) {
-                val tempTitle = binding.titleThumbnail.text
-                Toast.makeText(view.context, "Thumbnail Save Clicked at article : $tempTitle", Toast.LENGTH_SHORT).show()
+                Toast.makeText(view.context, "Thumbnail Save Clicked at position $layoutPosition", Toast.LENGTH_SHORT).show()
             }
             println("Save Clicked")
         }
 
         override fun onClick(view: View?) {
             if (view != null) {
-                val tempTitle = binding.titleThumbnail.text
-                Toast.makeText(view.context, "Thumbnail Story Clicked at article : $tempTitle", Toast.LENGTH_SHORT).show()
+                val tempDisplay = getData()[layoutPosition].title
+                Toast.makeText(view.context, "Thumbnail Story Clicked at article : $tempDisplay", Toast.LENGTH_SHORT).show()
             }
             println("$view Clicked")
         }
