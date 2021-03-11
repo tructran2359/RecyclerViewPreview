@@ -1,12 +1,16 @@
 package com.me.recyclerviewpreview
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import com.me.recyclerviewpreview.databinding.ItemFeaturedStoryBinding
+import com.me.recyclerviewpreview.databinding.ItemThumbnailStoryBinding
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -21,39 +25,41 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<Story>()
 
-    class FeaturedStoryHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var titleTextView: TextView = itemView.findViewById(R.id.title)
-        var descriptionTextView: TextView = itemView.findViewById(R.id.description)
-        var imageView: ImageView = itemView.findViewById(R.id.imageView)
-        var authorTextView: TextView = itemView.findViewById(R.id.author)
-        var timeTextView: TextView = itemView.findViewById(R.id.time)
+    class FeaturedStoryHolder(private val binding:ItemFeaturedStoryBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Story) {
-            titleTextView.text = item.title
-            descriptionTextView.text = item.description
-            imageView.load(item.imageUrl)
-            if (item.author != null && item.author.isNotEmpty()) {
-                authorTextView.text = "By " + item.author
-            } else {
-                authorTextView.text = ""
-            }
+            with(binding) {
+                title.text = item.title
+                description.text = item.description
+                imageView.load(item.imageUrl)
+                if (item.author != null && item.author.isNotEmpty()) {
+//                    println("By " + item.author)
+                    val stringTemp = "By " + item.author
+                    author.text = stringTemp
+                    println(author.text)
+                } else {
+                    author.text = ""
+                    println(item.author)
+                }
 
-            if (item.releaseDate != null && item.releaseDate.isNotEmpty()) {
-                timeTextView.text = getTimeAgo(item.releaseDate)
-            } else {
-                timeTextView.text = ""
+                if (item.releaseDate != null && item.releaseDate.isNotEmpty()) {
+                    time.text = getTimeAgo(item.releaseDate)
+                } else {
+                    time.text = ""
+                }
             }
 
         }
+
+
     }
 
-    class ThumbnailStoryHolder(thumbnailView: View) : RecyclerView.ViewHolder(thumbnailView) {
-        var titleThumbnail: TextView = itemView.findViewById(R.id.title_thumbnail)
-        var imageThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
-        var authorThumbnail: TextView = itemView.findViewById(R.id.author_thumbnail)
-        var timeThumbnail: TextView = itemView.findViewById(R.id.time_thumbnail)
+    class ThumbnailStoryHolder(private val binding:ItemThumbnailStoryBinding) : RecyclerView.ViewHolder(binding.root) {
+//        private val binding = ItemThumbnailStoryBinding.bind(thumbnailView)
 
         fun bind(story: Story) {
+            with(binding){
+
             titleThumbnail.text = story.title
             imageThumbnail.load(story.imageUrl)
             if (story.author != null && story.author.isNotEmpty()) {
@@ -67,24 +73,26 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {
                 timeThumbnail.text = ""
             }
-
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_FEATURED) {
-            val view = parent.inflate(R.layout.item_featured_story)
-            FeaturedStoryHolder(view)
+            val bindingFeature = ItemFeaturedStoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+//            val view = parent.inflate(R.layout.item_featured_story)
+            FeaturedStoryHolder(bindingFeature)
         } else {
-            val view = parent.inflate(R.layout.item_thumbnail_story)
-            ThumbnailStoryHolder(view)
+            val bindingThumbnail = ItemThumbnailStoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+//            val view = parent.inflate(R.layout.item_thumbnail_story)
+            ThumbnailStoryHolder(bindingThumbnail)
         }
     }
 
     override fun getItemCount() = items.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) {
+        return if (position == 0 ) {
             TYPE_FEATURED
         } else {
             TYPE_THUMBNAIL
