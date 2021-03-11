@@ -4,16 +4,21 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.me.recyclerviewpreview.databinding.ItemFeaturedStoryBinding
 import com.me.recyclerviewpreview.databinding.ItemThumbnailStoryBinding
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+
+//data class Story(val name: String, val age: Int)
+
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -25,7 +30,8 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val items = mutableListOf<Story>()
 
-    class FeaturedStoryHolder(private val binding: ItemFeaturedStoryBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    class FeaturedStoryHolder(private val binding: ItemFeaturedStoryBinding) : RecyclerView.ViewHolder(binding.root)
+            , View.OnClickListener {
 
         fun bind(item: Story) {
             with(binding) {
@@ -52,7 +58,6 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
 
         }
-
         private fun onShareClick(view: View?) {
             if (view != null) {
                 Toast.makeText(view.context, "Share Clicked at position $layoutPosition ", Toast.LENGTH_SHORT).show()
@@ -74,7 +79,6 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             println("$view Clicked")
         }
-
 
     }
 
@@ -153,6 +157,7 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             (holder as ThumbnailStoryHolder)
             holder.bind(item)
             holder.itemView.setOnClickListener { holder.onClick(it) }
+
         }
 
     }
@@ -168,6 +173,11 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
     }
 
+    fun setList(newList: ArrayList<Story>) {
+        DiffUtil.calculateDiff(StoryUtil(this.items, newList)).dispatchUpdatesTo(this)
+        this.items.clear()
+        this.items.addAll(newList)
+    }
 }
 
 fun getTimeAgo(timeString: String): String {
