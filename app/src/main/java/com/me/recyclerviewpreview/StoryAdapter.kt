@@ -23,9 +23,9 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         const val TYPE_THUMBNAIL = 2
     }
 
-    private val items = mutableListOf<Story>()
+    val items = mutableListOf<Story>()
 
-    class FeaturedStoryHolder(private val binding:ItemFeaturedStoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    class FeaturedStoryHolder(private val binding: ItemFeaturedStoryBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         fun bind(item: Story) {
             with(binding) {
@@ -47,44 +47,92 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 } else {
                     time.text = ""
                 }
+                save.setOnClickListener { onSaveClick(it) }
+                share.setOnClickListener { onShareClick(it) }
             }
 
+        }
+
+        private fun onShareClick(view: View?) {
+            if (view != null) {
+                val tempFeatureSelection = binding.title.text
+                Toast.makeText(view.context, "Share Clicked at article :$tempFeatureSelection ", Toast.LENGTH_SHORT).show()
+            }
+            println("Share Clicked")
+        }
+
+        private fun onSaveClick(view: View?) {
+            if (view != null) {
+                val tempFeatureSelection = binding.title.text
+                Toast.makeText(view.context, "Save Clicked at article :$tempFeatureSelection ", Toast.LENGTH_SHORT).show()
+            }
+            println("Save Clicked")
+        }
+
+        override fun onClick(view: View?) {
+            if (view != null) {
+                val tempFeatureSelection = binding.title.text
+                Toast.makeText(view.context, "Feature story selected at article :$tempFeatureSelection ", Toast.LENGTH_SHORT).show()
+            }
+            println("$view Clicked")
         }
 
 
     }
 
-    class ThumbnailStoryHolder(private val binding:ItemThumbnailStoryBinding) : RecyclerView.ViewHolder(binding.root) {
-//        private val binding = ItemThumbnailStoryBinding.bind(thumbnailView)
-
+    class ThumbnailStoryHolder(private val binding: ItemThumbnailStoryBinding) : RecyclerView.ViewHolder(binding.root),View.OnClickListener {
         fun bind(story: Story) {
-            with(binding){
+            with(binding) {
 
-            titleThumbnail.text = story.title
-            imageThumbnail.load(story.imageUrl)
-            if (story.author != null && story.author.isNotEmpty()) {
-                authorThumbnail.text = "By " + story.author
-            } else {
-                authorThumbnail.text = story.author
-            }
+                titleThumbnail.text = story.title
+                imageThumbnail.load(story.imageUrl)
+                if (story.author != null && story.author.isNotEmpty()) {
+                    authorThumbnail.text = "By " + story.author
+                } else {
+                    authorThumbnail.text = story.author
+                }
 
-            if (story.releaseDate != null && story.releaseDate.isNotEmpty()) {
-                timeThumbnail.text = getTimeAgo(story.releaseDate)
-            } else {
-                timeThumbnail.text = ""
+                if (story.releaseDate != null && story.releaseDate.isNotEmpty()) {
+                    timeThumbnail.text = getTimeAgo(story.releaseDate)
+                } else {
+                    timeThumbnail.text = ""
+                }
+                share.setOnClickListener { onShareClick(it) }
+                save.setOnClickListener { onSaveClick(it) }
             }
+        }
+
+        private fun onShareClick(view: View?) {
+            if (view != null) {
+                val tempTitle = binding.titleThumbnail.text
+                Toast.makeText(view.context, "Thumbnail Share Clicked at article : $tempTitle", Toast.LENGTH_SHORT).show()
             }
+            println("Share Clicked")
+        }
+
+        private fun onSaveClick(view: View?) {
+            if (view != null) {
+                val tempTitle = binding.titleThumbnail.text
+                Toast.makeText(view.context, "Thumbnail Save Clicked at article : $tempTitle", Toast.LENGTH_SHORT).show()
+            }
+            println("Save Clicked")
+        }
+
+        override fun onClick(view: View?) {
+            if (view != null) {
+                val tempTitle = binding.titleThumbnail.text
+                Toast.makeText(view.context, "Thumbnail Story Clicked at article : $tempTitle", Toast.LENGTH_SHORT).show()
+            }
+            println("$view Clicked")
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_FEATURED) {
-            val bindingFeature = ItemFeaturedStoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-//            val view = parent.inflate(R.layout.item_featured_story)
+            val bindingFeature = ItemFeaturedStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             FeaturedStoryHolder(bindingFeature)
         } else {
-            val bindingThumbnail = ItemThumbnailStoryBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-//            val view = parent.inflate(R.layout.item_thumbnail_story)
+            val bindingThumbnail = ItemThumbnailStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             ThumbnailStoryHolder(bindingThumbnail)
         }
     }
@@ -92,7 +140,7 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemCount() = items.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0 ) {
+        return if (position == 0) {
             TYPE_FEATURED
         } else {
             TYPE_THUMBNAIL
@@ -104,12 +152,15 @@ class StoryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holder.itemViewType == 1) {
             (holder as FeaturedStoryHolder)
             holder.bind(item)
+            holder.itemView.setOnClickListener { holder.onClick(it) }
         } else {
             (holder as ThumbnailStoryHolder)
             holder.bind(item)
+            holder.itemView.setOnClickListener { holder.onClick(it) }
         }
 
     }
+
 
     fun setItems(items: List<Story>) {
         this.items.clear()
