@@ -3,7 +3,6 @@ package com.me.recyclerviewpreview
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -22,8 +21,7 @@ class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
 }
 class FeaturedStoryHolder(
         private val binding: ItemFeaturedStoryBinding
-) : RecyclerView.ViewHolder(binding.root)
-        , View.OnClickListener {
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: Story) {
         with(binding) {
@@ -42,38 +40,15 @@ class FeaturedStoryHolder(
             } else {
                 time.text = ""
             }
-            save.setOnClickListener { onSaveClick(it) }
-            share.setOnClickListener { onShareClick(it) }
+            save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
+            share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
         }
     }
-
-    private fun onShareClick(view: View?) {
-        if (view != null) {
-            Toast.makeText(view.context, "Share Clicked at position $layoutPosition ", Toast.LENGTH_SHORT).show()
-        }
-        println("Share Clicked")
-    }
-
-    private fun onSaveClick(view: View?) {
-        if (view != null) {
-            Toast.makeText(view.context, "Save Clicked at position $layoutPosition ", Toast.LENGTH_SHORT).show()
-        }
-        println("Save Clicked")
-    }
-
-    override fun onClick(view: View?) {
-        if (view != null) {
-            val tempDisplay = getData()[layoutPosition].title
-            Toast.makeText(view.context, "Feature story selected at article :$tempDisplay ", Toast.LENGTH_SHORT).show()
-        }
-        println("$view Clicked")
-    }
-
 }
 
 class ThumbnailStoryHolder(
         private val binding: ItemThumbnailStoryBinding)
-    : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    : RecyclerView.ViewHolder(binding.root){
     fun bind(story: Story) {
         with(binding) {
 
@@ -90,31 +65,9 @@ class ThumbnailStoryHolder(
             } else {
                 timeThumbnail.text = ""
             }
-            share.setOnClickListener { onShareClick(it) }
-            save.setOnClickListener { onSaveClick(it) }
+            share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
+            save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
         }
-    }
-
-    private fun onShareClick(view: View?) {
-        if (view != null) {
-            Toast.makeText(view.context, "Thumbnail Share Clicked at position $layoutPosition", Toast.LENGTH_SHORT).show()
-        }
-        println("Share Clicked")
-    }
-
-    private fun onSaveClick(view: View?) {
-        if (view != null) {
-            Toast.makeText(view.context, "Thumbnail Save Clicked at position $layoutPosition", Toast.LENGTH_SHORT).show()
-        }
-        println("Save Clicked")
-    }
-
-    override fun onClick(view: View?) {
-        if (view != null) {
-            val tempDisplay = getData()[layoutPosition].title
-            Toast.makeText(view.context, "Thumbnail Story Clicked at article : $tempDisplay", Toast.LENGTH_SHORT).show()
-        }
-        println("$view Clicked")
     }
 }
 
@@ -123,9 +76,6 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
         const val TYPE_FEATURED = 1
         const val TYPE_THUMBNAIL = 2
     }
-
-    private val items = mutableListOf<Story>()
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_FEATURED) {
@@ -149,11 +99,11 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
         if (holder.itemViewType == 1) {
             (holder as FeaturedStoryHolder)
             holder.bind(item)
-            holder.itemView.setOnClickListener { holder.onClick(it) }
+            holder.itemView.setOnClickListener { MainActivity().onVHClick(it,position) }
         } else {
             (holder as ThumbnailStoryHolder)
             holder.bind(item)
-            holder.itemView.setOnClickListener { holder.onClick(it) }
+            holder.itemView.setOnClickListener { MainActivity().onVHClick(it,position) }
         }
     }
 

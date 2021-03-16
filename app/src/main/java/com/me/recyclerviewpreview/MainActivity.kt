@@ -2,7 +2,6 @@ package com.me.recyclerviewpreview
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,15 +20,25 @@ class MainActivity : AppCompatActivity() {
         adapter.submitList(getData())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        findViewById<ImageView>(R.id.save).setOnClickListener { onClick(it) }
     }
 
-    private fun onClick(view: View?) {
+    fun onVHClick(view: View?, position: Int) {
         if (view != null) {
-            Toast.makeText(view.context, "test $", Toast.LENGTH_SHORT).show()
+            val tempDisplay = getData()[position].title
+            Toast.makeText(view.context, "Selected Article : $tempDisplay", Toast.LENGTH_SHORT).show()
         }
-        println("$view Clicked")
+    }
+
+    fun onSaveClick(view: View?, position: Int) {
+        if (view != null) {
+            Toast.makeText(view.context, "Save Clicked at position $position ", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun onShareClick(view: View?, position: Int) {
+        if (view != null) {
+            Toast.makeText(view.context, "Share Clicked at position $position ", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
