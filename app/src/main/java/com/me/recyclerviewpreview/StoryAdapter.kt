@@ -20,7 +20,9 @@ class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
     override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
 
 }
-class FeaturedStoryHolder(private val binding: ItemFeaturedStoryBinding) : RecyclerView.ViewHolder(binding.root)
+class FeaturedStoryHolder(
+        private val binding: ItemFeaturedStoryBinding
+) : RecyclerView.ViewHolder(binding.root)
         , View.OnClickListener {
 
     fun bind(item: Story) {
@@ -69,7 +71,9 @@ class FeaturedStoryHolder(private val binding: ItemFeaturedStoryBinding) : Recyc
 
 }
 
-class ThumbnailStoryHolder(private val binding: ItemThumbnailStoryBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+class ThumbnailStoryHolder(
+        private val binding: ItemThumbnailStoryBinding)
+    : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
     fun bind(story: Story) {
         with(binding) {
 
@@ -132,9 +136,6 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
             ThumbnailStoryHolder(bindingThumbnail)
         }
     }
-
-    override fun getItemCount() = items.size
-
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) {
             TYPE_FEATURED
@@ -144,7 +145,7 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position)
         if (holder.itemViewType == 1) {
             (holder as FeaturedStoryHolder)
             holder.bind(item)
@@ -153,26 +154,11 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
             (holder as ThumbnailStoryHolder)
             holder.bind(item)
             holder.itemView.setOnClickListener { holder.onClick(it) }
-
         }
-
-    }
-
-
-    fun setItems(items: List<Story>) {
-        this.items.clear()
-        this.items.addAll(items)
-        notifyDataSetChanged()
     }
 
     private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
         return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
-    }
-
-    fun setList(newList: ArrayList<Story>) {
-        DiffUtil.calculateDiff(StoryUtil(this.items, newList)).dispatchUpdatesTo(this)
-        this.items.clear()
-        this.items.addAll(newList)
     }
 }
 
