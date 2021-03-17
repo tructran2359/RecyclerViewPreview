@@ -13,63 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
-    override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
-
-    override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
-
-}
-class FeaturedStoryHolder(
-        private val binding: ItemFeaturedStoryBinding
-) : RecyclerView.ViewHolder(binding.root) {
-
-    fun bind(item: Story) {
-        with(binding) {
-            title.text = item.title
-            description.text = item.description
-            imageView.load(item.imageUrl)
-            if (item.author != null && item.author.isNotEmpty()) {
-                val stringTemp = "By " + item.author
-                author.text = stringTemp
-            } else {
-                author.text = ""
-            }
-
-            if (item.releaseDate != null && item.releaseDate.isNotEmpty()) {
-                time.text = getTimeAgo(item.releaseDate)
-            } else {
-                time.text = ""
-            }
-            save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
-            share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
-        }
-    }
-}
-
-class ThumbnailStoryHolder(
-        private val binding: ItemThumbnailStoryBinding)
-    : RecyclerView.ViewHolder(binding.root){
-    fun bind(story: Story) {
-        with(binding) {
-
-            titleThumbnail.text = story.title
-            imageThumbnail.load(story.imageUrl)
-            if (story.author != null && story.author.isNotEmpty()) {
-                authorThumbnail.text = "By " + story.author
-            } else {
-                authorThumbnail.text = story.author
-            }
-
-            if (story.releaseDate != null && story.releaseDate.isNotEmpty()) {
-                timeThumbnail.text = getTimeAgo(story.releaseDate)
-            } else {
-                timeThumbnail.text = ""
-            }
-            share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
-            save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
-        }
-    }
-}
 
 class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
     companion object {
@@ -110,6 +53,78 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
     private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
         return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
     }
+
+    class FeaturedStoryHolder(
+            private val binding: ItemFeaturedStoryBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: Story) {
+            with(binding) {
+                title.text = item.title
+                description.text = item.description
+                imageView.load(item.imageUrl)
+                if (!item.author.isNullOrEmpty()) {
+                    val stringTemp = "By ${item.author} "
+                    author.text = stringTemp
+                } else {
+                    author.text = ""
+                }
+
+                if (!item.releaseDate.isNullOrEmpty()) {
+                    time.text = getTimeAgo(item.releaseDate)
+                } else {
+                    time.text = ""
+                }
+                save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
+                share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
+            }
+        }
+    }
+
+    class ThumbnailStoryHolder(
+            private val binding: ItemThumbnailStoryBinding)
+        : RecyclerView.ViewHolder(binding.root){
+        fun bind(story: Story) {
+            with(binding) {
+
+                titleThumbnail.text = story.title
+                imageThumbnail.load(story.imageUrl)
+                if (!story.author.isNullOrEmpty()) {
+                    authorThumbnail.text = "By ${story.author}"
+                } else {
+                    authorThumbnail.text = story.author
+                }
+
+                if (!story.releaseDate.isNullOrEmpty()) {
+                    timeThumbnail.text = getTimeAgo(story.releaseDate)
+                } else {
+                    timeThumbnail.text = ""
+                }
+                share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
+                save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
+            }
+        }
+    }
+
+    interface OnStoryClick {
+        fun onStoryClick(){
+        }
+
+        fun onSaveClick(){
+        }
+
+        fun onShareClick(){
+        }
+
+    }
+}
+
+class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
+
+    override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem.nid == newItem.nid
+
+    override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
+
 }
 
 fun getTimeAgo(timeString: String): String {
