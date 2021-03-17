@@ -7,6 +7,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.me.recyclerviewpreview.StoryAdapter.*
 import com.me.recyclerviewpreview.databinding.ItemFeaturedStoryBinding
 import com.me.recyclerviewpreview.databinding.ItemThumbnailStoryBinding
 import java.text.SimpleDateFormat
@@ -14,19 +15,18 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
+class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
     companion object {
         const val TYPE_FEATURED = 1
         const val TYPE_THUMBNAIL = 2
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_FEATURED) {
             val bindingFeature = ItemFeaturedStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            FeaturedStoryHolder(bindingFeature)
+            FeaturedStoryHolder(bindingFeature,itemClick)
         } else {
             val bindingThumbnail = ItemThumbnailStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            ThumbnailStoryHolder(bindingThumbnail)
+            ThumbnailStoryHolder(bindingThumbnail,itemClick)
         }
     }
     override fun getItemViewType(position: Int): Int {
@@ -42,11 +42,11 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
         if (holder.itemViewType == 1) {
             (holder as FeaturedStoryHolder)
             holder.bind(item)
-            holder.itemView.setOnClickListener { MainActivity().onVHClick(it,position) }
+            holder.itemView.setOnClickListener { itemClick.onStoryClick(item,holder.layoutPosition) }
         } else {
             (holder as ThumbnailStoryHolder)
             holder.bind(item)
-            holder.itemView.setOnClickListener { MainActivity().onVHClick(it,position) }
+            holder.itemView.setOnClickListener { itemClick.onStoryClick(item,holder.layoutPosition) }
         }
     }
 
@@ -55,9 +55,9 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
     }
 
     class FeaturedStoryHolder(
-            private val binding: ItemFeaturedStoryBinding
+            private val binding: ItemFeaturedStoryBinding,
+            private val itemClick: OnStoryClick
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(item: Story) {
             with(binding) {
                 title.text = item.title
@@ -75,16 +75,19 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
                 } else {
                     time.text = ""
                 }
-                save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
-                share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
+                save.setOnClickListener {itemClick.onSaveClick(item,layoutPosition)}
+                share.setOnClickListener {itemClick.onShareClick(item,layoutPosition)}
             }
         }
     }
 
     class ThumbnailStoryHolder(
-            private val binding: ItemThumbnailStoryBinding)
-        : RecyclerView.ViewHolder(binding.root){
+            private val binding: ItemThumbnailStoryBinding,
+            private val itemClick: OnStoryClick
+    )
+        : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: Story) {
+            binding.save.setOnClickListener {}
             with(binding) {
 
                 titleThumbnail.text = story.title
@@ -95,28 +98,20 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
                     authorThumbnail.text = story.author
                 }
 
-                if (!story.releaseDate.isNullOrEmpty()) {
-                    timeThumbnail.text = getTimeAgo(story.releaseDate)
-                } else {
+                if (!story.releaseDate.isNullOrEmpty()) timeThumbnail.text = getTimeAgo(story.releaseDate) else {
                     timeThumbnail.text = ""
                 }
-                share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
-                save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
+                share.setOnClickListener {itemClick.onShareClick(story,layoutPosition)}
+                save.setOnClickListener {itemClick.onSaveClick(story,layoutPosition)}
             }
         }
     }
 
-    interface OnStoryClick {
-        fun onStoryClick(){
-        }
-
-        fun onSaveClick(){
-        }
-
-        fun onShareClick(){
-        }
-
-    }
+}
+interface OnStoryClick {
+    fun onStoryClick(story: Story,position: Int)
+    fun onSaveClick(story: Story,position: Int)
+    fun onShareClick(story: Story,position: Int)
 }
 
 class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
