@@ -5,15 +5,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.me.recyclerviewpreview.Controller.DataCallController
+import com.me.recyclerviewpreview.Controller.MainController
+import com.me.recyclerviewpreview.Story.StoryClass
+import com.me.recyclerviewpreview.ViewInterface.StoriesViewInterface
 import com.me.recyclerviewpreview.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity(),StoriesViewInterface {
+class MainActivity : AppCompatActivity(), StoriesViewInterface {
     private lateinit var listOfStories: List<StoryClass>
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: StoryAdapter
-    private lateinit var controller : MainController
-    private lateinit var recyclerView : RecyclerView
+    private lateinit var controller: MainController
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +25,7 @@ class MainActivity : AppCompatActivity(),StoriesViewInterface {
         setContentView(binding.root)
         recyclerView = binding.recyclerView
 
-        controller = MainController(this,DataCallController())
+        controller = MainController(this, DataCallController())
         controller.getStoriesFromDataSource()
 
     }
@@ -29,25 +33,25 @@ class MainActivity : AppCompatActivity(),StoriesViewInterface {
     private val itemClick = object : OnStoryClick {
         override fun onStoryClick(story: StoryClass, position: Int) {
             Toast.makeText(
-                baseContext,
-                "Selected at : ${story.storyTitle} --- at position $position",
-                Toast.LENGTH_SHORT
+                    baseContext,
+                    "Selected at : ${story.storyTitle} --- at position $position",
+                    Toast.LENGTH_SHORT
             ).show()
         }
 
         override fun onSaveClick(story: StoryClass, position: Int) {
             Toast.makeText(
-                baseContext,
-                "Selected Save at : ${story.storyTitle}  --- at position $position",
-                Toast.LENGTH_SHORT
+                    baseContext,
+                    "Selected Save at : ${story.storyTitle}  --- at position $position",
+                    Toast.LENGTH_SHORT
             ).show()
         }
 
         override fun onShareClick(story: StoryClass, position: Int) {
             Toast.makeText(
-                baseContext,
-                "Selected Share at : ${story.storyTitle}  --- at position $position",
-                Toast.LENGTH_SHORT
+                    baseContext,
+                    "Selected Share at : ${story.storyTitle}  --- at position $position",
+                    Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -58,7 +62,6 @@ class MainActivity : AppCompatActivity(),StoriesViewInterface {
         adapter = StoryAdapter(itemClick)
         adapter.submitList(listOfStories)
         recyclerView.adapter = adapter
-
     }
 }
 

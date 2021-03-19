@@ -1,5 +1,6 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.Api
 
+import com.me.recyclerviewpreview.Story.StoryClass
 import retrofit2.Call
 import retrofit2.http.GET
 

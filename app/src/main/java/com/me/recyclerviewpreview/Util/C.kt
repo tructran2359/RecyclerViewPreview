@@ -1,4 +1,4 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.Util
 //
 //import com.google.gson.Gson
 //import com.google.gson.reflect.TypeToken

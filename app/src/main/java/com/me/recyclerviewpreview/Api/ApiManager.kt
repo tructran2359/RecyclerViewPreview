@@ -1,4 +1,4 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.Api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,9 +11,9 @@ class ApiManager {
     fun getService(): ApiService? {
         if (service == null) {
             val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
             service = retrofit.create(ApiService::class.java)
         }
         return service

@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.me.recyclerviewpreview.Story.StoryClass
 import com.me.recyclerviewpreview.databinding.ItemFeaturedStoryBinding
 import com.me.recyclerviewpreview.databinding.ItemThumbnailStoryBinding
 import java.text.SimpleDateFormat

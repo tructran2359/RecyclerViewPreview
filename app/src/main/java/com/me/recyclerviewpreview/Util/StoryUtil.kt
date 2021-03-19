@@ -1,6 +1,7 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.Util
 
 import androidx.recyclerview.widget.DiffUtil
+import com.me.recyclerviewpreview.Story.StoryClass
 
 class StoryUtil(private val oldList: List<StoryClass>, private val newList: List<StoryClass>) : DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

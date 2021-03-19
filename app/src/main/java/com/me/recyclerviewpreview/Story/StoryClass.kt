@@ -1,18 +1,23 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.Story
 
 import com.google.gson.annotations.SerializedName
 
 class StoryClass {
     @SerializedName("nid")
-    val storyID : Int? = null
+    val storyID: Int? = null
+
     @SerializedName("title")
-    val storyTitle : String? =null
+    val storyTitle: String? = null
+
     @SerializedName("author")
-    val storyAuthor : String? =null
+    val storyAuthor: String? = null
+
     @SerializedName("release_date")
-    val storyDate : String? =null
+    val storyDate: String? = null
+
     @SerializedName("description")
-    val storyDescription : String? =null
+    val storyDescription: String? = null
+
     @SerializedName("image_url")
-    val storyImageURL : String? =null
+    val storyImageURL: String? = null
 }
