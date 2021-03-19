@@ -1,4 +1,4 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.util
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide

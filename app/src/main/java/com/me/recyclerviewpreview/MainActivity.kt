@@ -5,27 +5,29 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.me.recyclerviewpreview.Controller.DataCallController
-import com.me.recyclerviewpreview.Controller.MainController
-import com.me.recyclerviewpreview.Story.StoryClass
-import com.me.recyclerviewpreview.ViewInterface.StoriesViewInterface
+import com.me.recyclerviewpreview.controller.DataCallController
+import com.me.recyclerviewpreview.controller.MainController
+import com.me.recyclerviewpreview.story.StoryClass
+import com.me.recyclerviewpreview.viewInterface.StoriesViewInterface
+import com.me.recyclerviewpreview.adapter.OnStoryClick
+import com.me.recyclerviewpreview.adapter.StoryAdapter
 import com.me.recyclerviewpreview.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity(), StoriesViewInterface {
-    private lateinit var listOfStories: List<StoryClass>
-    private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: StoryAdapter
-    private lateinit var controller: MainController
-    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        recyclerView = binding.recyclerView
 
-        controller = MainController(this, DataCallController())
+        val recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = StoryAdapter(itemClick)
+        recyclerView.adapter = adapter
+
+        val controller = MainController(this, DataCallController())
         controller.getStoriesFromDataSource()
 
     }
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity(), StoriesViewInterface {
     private val itemClick = object : OnStoryClick {
         override fun onStoryClick(story: StoryClass, position: Int) {
             Toast.makeText(
-                    baseContext,
+                    this@MainActivity,
                     "Selected at : ${story.storyTitle} --- at position $position",
                     Toast.LENGTH_SHORT
             ).show()
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity(), StoriesViewInterface {
 
         override fun onSaveClick(story: StoryClass, position: Int) {
             Toast.makeText(
-                    baseContext,
+                    this@MainActivity,
                     "Selected Save at : ${story.storyTitle}  --- at position $position",
                     Toast.LENGTH_SHORT
             ).show()
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity(), StoriesViewInterface {
 
         override fun onShareClick(story: StoryClass, position: Int) {
             Toast.makeText(
-                    baseContext,
+                    this@MainActivity,
                     "Selected Share at : ${story.storyTitle}  --- at position $position",
                     Toast.LENGTH_SHORT
             ).show()
@@ -57,11 +59,7 @@ class MainActivity : AppCompatActivity(), StoriesViewInterface {
     }
 
     override fun setUpAdapterAndView(listOfStories: List<StoryClass>) {
-        this.listOfStories = listOfStories
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = StoryAdapter(itemClick)
         adapter.submitList(listOfStories)
-        recyclerView.adapter = adapter
     }
 }
 

@@ -1,4 +1,4 @@
-package com.me.recyclerviewpreview.Api
+package com.me.recyclerviewpreview.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

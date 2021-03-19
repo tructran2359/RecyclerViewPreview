@@ -1,4 +1,4 @@
-package com.me.recyclerviewpreview
+package com.me.recyclerviewpreview.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,9 +8,10 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.me.recyclerviewpreview.Story.StoryClass
+import com.me.recyclerviewpreview.story.StoryClass
 import com.me.recyclerviewpreview.databinding.ItemFeaturedStoryBinding
 import com.me.recyclerviewpreview.databinding.ItemThumbnailStoryBinding
+import com.me.recyclerviewpreview.util.load
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit

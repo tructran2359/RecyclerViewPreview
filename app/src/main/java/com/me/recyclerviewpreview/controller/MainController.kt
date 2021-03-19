@@ -1,6 +1,6 @@
-package com.me.recyclerviewpreview.Controller
+package com.me.recyclerviewpreview.controller
 
-import com.me.recyclerviewpreview.ViewInterface.StoriesViewInterface
+import com.me.recyclerviewpreview.viewInterface.StoriesViewInterface
 
 class MainController(private val view: StoriesViewInterface, private val call: DataCallController) {
     fun getStoriesFromDataSource() {

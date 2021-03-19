@@ -1,8 +1,8 @@
-package com.me.recyclerviewpreview.Controller
+package com.me.recyclerviewpreview.controller
 
-import com.me.recyclerviewpreview.ViewInterface.StoriesViewInterface
-import com.me.recyclerviewpreview.Story.StoryClass
-import com.me.recyclerviewpreview.Api.ApiManager
+import com.me.recyclerviewpreview.viewInterface.StoriesViewInterface
+import com.me.recyclerviewpreview.story.StoryClass
+import com.me.recyclerviewpreview.api.ApiManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

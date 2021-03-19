@@ -1,4 +1,4 @@
-package com.me.recyclerviewpreview.Story
+package com.me.recyclerviewpreview.story
 
 
 //import com.google.gson.annotations.SerializedName
