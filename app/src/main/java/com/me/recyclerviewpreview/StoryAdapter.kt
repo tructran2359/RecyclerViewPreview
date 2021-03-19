@@ -1,5 +1,6 @@
 package com.me.recyclerviewpreview
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,65 +14,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
-    override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
 
-    override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
-
-}
-class FeaturedStoryHolder(
-        private val binding: ItemFeaturedStoryBinding
-) : RecyclerView.ViewHolder(binding.root) {
-
-    fun bind(item: Story) {
-        with(binding) {
-            title.text = item.title
-            description.text = item.description
-            imageView.load(item.imageUrl)
-            if (item.author != null && item.author.isNotEmpty()) {
-                val stringTemp = "By " + item.author
-                author.text = stringTemp
-            } else {
-                author.text = ""
-            }
-
-            if (item.releaseDate != null && item.releaseDate.isNotEmpty()) {
-                time.text = getTimeAgo(item.releaseDate)
-            } else {
-                time.text = ""
-            }
-            save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
-            share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
-        }
-    }
-}
-
-class ThumbnailStoryHolder(
-        private val binding: ItemThumbnailStoryBinding)
-    : RecyclerView.ViewHolder(binding.root){
-    fun bind(story: Story) {
-        with(binding) {
-
-            titleThumbnail.text = story.title
-            imageThumbnail.load(story.imageUrl)
-            if (story.author != null && story.author.isNotEmpty()) {
-                authorThumbnail.text = "By " + story.author
-            } else {
-                authorThumbnail.text = story.author
-            }
-
-            if (story.releaseDate != null && story.releaseDate.isNotEmpty()) {
-                timeThumbnail.text = getTimeAgo(story.releaseDate)
-            } else {
-                timeThumbnail.text = ""
-            }
-            share.setOnClickListener { MainActivity().onShareClick(it,layoutPosition) }
-            save.setOnClickListener { MainActivity().onSaveClick(it,layoutPosition) }
-        }
-    }
-}
-
-class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
+class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<StoryClass, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
     companion object {
         const val TYPE_FEATURED = 1
         const val TYPE_THUMBNAIL = 2
@@ -80,12 +24,13 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_FEATURED) {
             val bindingFeature = ItemFeaturedStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            FeaturedStoryHolder(bindingFeature)
+            FeaturedStoryHolder(bindingFeature, itemClick)
         } else {
             val bindingThumbnail = ItemThumbnailStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            ThumbnailStoryHolder(bindingThumbnail)
+            ThumbnailStoryHolder(bindingThumbnail, itemClick)
         }
     }
+
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) {
             TYPE_FEATURED
@@ -99,17 +44,85 @@ class StoryAdapter : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCa
         if (holder.itemViewType == 1) {
             (holder as FeaturedStoryHolder)
             holder.bind(item)
-            holder.itemView.setOnClickListener { MainActivity().onVHClick(it,position) }
+            holder.itemView.setOnClickListener { itemClick.onStoryClick(item, holder.layoutPosition) }
         } else {
             (holder as ThumbnailStoryHolder)
             holder.bind(item)
-            holder.itemView.setOnClickListener { MainActivity().onVHClick(it,position) }
+            holder.itemView.setOnClickListener { itemClick.onStoryClick(item, holder.layoutPosition) }
         }
     }
 
     private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
         return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
     }
+
+    class FeaturedStoryHolder(
+            private val binding: ItemFeaturedStoryBinding,
+            private val itemClick: OnStoryClick
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: StoryClass) {
+            with(binding) {
+                title.text = item.storyTitle
+                description.text = item.storyDescription
+                imageView.load(item.storyImageURL)
+                if (!item.storyAuthor.isNullOrEmpty()) {
+                    val stringTemp = "By ${item.storyAuthor} "
+                    author.text = stringTemp
+                } else {
+                    author.text = ""
+                }
+
+                if (!item.storyDate.isNullOrEmpty()) {
+                    time.text = getTimeAgo(item.storyDate)
+                } else {
+                    time.text = ""
+                }
+                save.setOnClickListener { itemClick.onSaveClick(item, layoutPosition) }
+                share.setOnClickListener { itemClick.onShareClick(item, layoutPosition) }
+            }
+        }
+    }
+
+    class ThumbnailStoryHolder(
+            private val binding: ItemThumbnailStoryBinding,
+            private val itemClick: OnStoryClick
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(story: StoryClass) {
+            binding.save.setOnClickListener {}
+            with(binding) {
+
+                titleThumbnail.text = story.storyTitle
+                imageThumbnail.load(story.storyImageURL)
+                if (!story.storyAuthor.isNullOrEmpty()) {
+                    authorThumbnail.text = "By ${story.storyAuthor}"
+                } else {
+                    authorThumbnail.text = story.storyAuthor
+                }
+
+                if (!story.storyDate.isNullOrEmpty()) timeThumbnail.text = getTimeAgo(story.storyDate) else {
+                    timeThumbnail.text = ""
+                }
+                share.setOnClickListener { itemClick.onShareClick(story, layoutPosition) }
+                save.setOnClickListener { itemClick.onSaveClick(story, layoutPosition) }
+            }
+        }
+    }
+
+}
+
+interface OnStoryClick {
+    fun onStoryClick(story: StoryClass, position: Int)
+    fun onSaveClick(story: StoryClass, position: Int)
+    fun onShareClick(story: StoryClass, position: Int)
+}
+
+class StoryItemDiffCallBack : DiffUtil.ItemCallback<StoryClass>() {
+
+    override fun areItemsTheSame(oldItem: StoryClass, newItem: StoryClass): Boolean = oldItem.storyID == newItem.storyID
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: StoryClass, newItem: StoryClass): Boolean = oldItem == newItem
+
 }
 
 fun getTimeAgo(timeString: String): String {
