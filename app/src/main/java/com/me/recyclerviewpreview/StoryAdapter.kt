@@ -1,5 +1,6 @@
 package com.me.recyclerviewpreview
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<Story, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
+class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<StoryClass, RecyclerView.ViewHolder>(StoryItemDiffCallBack()) {
     companion object {
         const val TYPE_FEATURED = 1
         const val TYPE_THUMBNAIL = 2
@@ -59,20 +60,20 @@ class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<Story, Rec
             private val binding: ItemFeaturedStoryBinding,
             private val itemClick: OnStoryClick
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Story) {
+        fun bind(item: StoryClass) {
             with(binding) {
-                title.text = item.title
-                description.text = item.description
-                imageView.load(item.imageUrl)
-                if (!item.author.isNullOrEmpty()) {
-                    val stringTemp = "By ${item.author} "
+                title.text = item.storyTitle
+                description.text = item.storyDescription
+                imageView.load(item.storyImageURL)
+                if (!item.storyAuthor.isNullOrEmpty()) {
+                    val stringTemp = "By ${item.storyAuthor} "
                     author.text = stringTemp
                 } else {
                     author.text = ""
                 }
 
-                if (!item.releaseDate.isNullOrEmpty()) {
-                    time.text = getTimeAgo(item.releaseDate)
+                if (!item.storyDate.isNullOrEmpty()) {
+                    time.text = getTimeAgo(item.storyDate)
                 } else {
                     time.text = ""
                 }
@@ -86,19 +87,19 @@ class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<Story, Rec
             private val binding: ItemThumbnailStoryBinding,
             private val itemClick: OnStoryClick
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(story: Story) {
+        fun bind(story: StoryClass) {
             binding.save.setOnClickListener {}
             with(binding) {
 
-                titleThumbnail.text = story.title
-                imageThumbnail.load(story.imageUrl)
-                if (!story.author.isNullOrEmpty()) {
-                    authorThumbnail.text = "By ${story.author}"
+                titleThumbnail.text = story.storyTitle
+                imageThumbnail.load(story.storyImageURL)
+                if (!story.storyAuthor.isNullOrEmpty()) {
+                    authorThumbnail.text = "By ${story.storyAuthor}"
                 } else {
-                    authorThumbnail.text = story.author
+                    authorThumbnail.text = story.storyAuthor
                 }
 
-                if (!story.releaseDate.isNullOrEmpty()) timeThumbnail.text = getTimeAgo(story.releaseDate) else {
+                if (!story.storyDate.isNullOrEmpty()) timeThumbnail.text = getTimeAgo(story.storyDate) else {
                     timeThumbnail.text = ""
                 }
                 share.setOnClickListener { itemClick.onShareClick(story, layoutPosition) }
@@ -110,16 +111,17 @@ class StoryAdapter(private val itemClick: OnStoryClick) : ListAdapter<Story, Rec
 }
 
 interface OnStoryClick {
-    fun onStoryClick(story: Story, position: Int)
-    fun onSaveClick(story: Story, position: Int)
-    fun onShareClick(story: Story, position: Int)
+    fun onStoryClick(story: StoryClass, position: Int)
+    fun onSaveClick(story: StoryClass, position: Int)
+    fun onShareClick(story: StoryClass, position: Int)
 }
 
-class StoryItemDiffCallBack : DiffUtil.ItemCallback<Story>() {
+class StoryItemDiffCallBack : DiffUtil.ItemCallback<StoryClass>() {
 
-    override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem.nid == newItem.nid
+    override fun areItemsTheSame(oldItem: StoryClass, newItem: StoryClass): Boolean = oldItem.storyID == newItem.storyID
 
-    override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean = oldItem == newItem
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: StoryClass, newItem: StoryClass): Boolean = oldItem == newItem
 
 }
 
